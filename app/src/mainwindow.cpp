@@ -1,31 +1,116 @@
 #include "mainwindow.h"
+#include "buttons/numberButton/numberbutton.h"
+#include "buttons/operatorButton/operatorbutton.h"
+#include "buttons/optionButton/optionbutton.h"
+#include "labels/resultLabel/resultlabel.h"
+#include "labels/stackLabel/stacklabel.h"
 
 #include <QDebug>
 #include <QPushButton>
 #include <QVBoxLayout>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), _mainLayout{ new QVBoxLayout(parent) }
+QVector<QPushButton *> options(QWidget *parent)
 {
-    this->setWindowTitle(QStringLiteral("Magic"));
-    this->setFixedSize(300, 400);
-    QWidget *centralWidget{ new QWidget{} };
-    setCentralWidget(centralWidget);
-    QPushButton *button{ new QPushButton("=", nullptr) };
-    QPushButton *button2{ new QPushButton("+", nullptr) };
-    QPushButton *button3{ new QPushButton("-", nullptr) };
-    _mainLayout->addWidget(button);
-    _mainLayout->addWidget(button2);
-    _mainLayout->addWidget(button3);
-    centralWidget->setLayout(_mainLayout);
-    connect(button, &QPushButton::clicked,
-            [button](bool) { qDebug() << "Clicked on " << button->text(); });
-    connect(button2, &QPushButton::clicked,
-            [button2](bool) { qDebug() << "Clicked on " << button2->text(); });
-    connect(button3, &QPushButton::clicked,
-            [button3](bool) { qDebug() << "Clicked on " << button3->text(); });
+    return { new OptionButton("C", parent), new OptionButton("CE", parent) };
+}
+
+QVector<QPushButton *> operators(QWidget *parent)
+{
+    return { new OperatorButton("/", parent), new OperatorButton("x", parent),
+             new OperatorButton("-", parent), new OperatorButton("+", parent) };
+}
+
+QVector<QPushButton *> numbers(QWidget *parent)
+{
+    return { new NumberButton("1", parent), new NumberButton("2", parent),
+             new NumberButton("3", parent), new NumberButton("4", parent),
+             new NumberButton("5", parent), new NumberButton("6", parent),
+             new NumberButton("7", parent), new NumberButton("8", parent),
+             new NumberButton("9", parent), new NumberButton(".", parent),
+             new NumberButton("0", parent), new NumberButton("=", parent) };
+}
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent),
+      _centralWidget{ new QWidget{ parent } },
+      _buttonsWidget{ new QWidget{ parent } },
+      _digitsWidget{ new QWidget{ parent } },
+      _operatorsWidget{ new QWidget{ parent } },
+      _optionsWidget{ new QWidget{ parent } },
+      _numbersWidget{ new QWidget{ parent } },
+      _mainLayout{ new QVBoxLayout(parent) },
+      _buttonsLayout{ new QHBoxLayout(_buttonsWidget) },
+      _digitsLayout{ new QVBoxLayout(_digitsWidget) },
+      _operatorsLayout{ new QVBoxLayout(_operatorsWidget) },
+      _optionsLayout{ new QHBoxLayout(_optionsWidget) },
+      _numbersLayout{ new QGridLayout(_numbersWidget) },
+      _stackLabel{ new StackLabel{ parent } },
+      _resultLabel{ new ResultLabel{ parent } }
+{
+    initWindow();
+    addLabels();
+    addWidgetsToLayouts();
+    addOperators(parent);
+    addOptions(parent);
+    addNumbers(parent);
+    _digitsLayout->setContentsMargins(0, 0, 0, 0);
 }
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::initWindow()
+{
+    setWindowTitle(QStringLiteral("Magic"));
+    setFixedSize(300, 400);
+    setCentralWidget(_centralWidget);
+    _centralWidget->setLayout(_mainLayout);
+}
+
+void MainWindow::addLabels()
+{
+    _mainLayout->addWidget(_stackLabel);
+    _mainLayout->addWidget(_resultLabel);
+}
+
+void MainWindow::addWidgetsToLayouts()
+{
+    _mainLayout->addWidget(_buttonsWidget);
+    _buttonsLayout->addWidget(_digitsWidget);
+    _buttonsLayout->addWidget(_operatorsWidget);
+    _digitsLayout->addWidget(_optionsWidget);
+    _digitsLayout->addWidget(_numbersWidget);
+}
+
+void MainWindow::addOptions(QWidget *parent)
+{
+    for (auto option : options(parent))
+    {
+        _optionsLayout->addWidget(option);
+    }
+}
+
+void MainWindow::addNumbers(QWidget *parent)
+{
+    const int maxColumns{ 3 };
+    int row{ 0 };
+    int column{ 0 };
+    for (auto number : numbers(parent))
+    {
+        _numbersLayout->addWidget(number, row, column++);
+        if (column == maxColumns)
+        {
+            column = 0;
+            row++;
+        }
+    }
+}
+
+void MainWindow::addOperators(QWidget *parent)
+{
+    for (auto oper : operators(parent))
+    {
+        _operatorsLayout->addWidget(oper);
+    }
 }
