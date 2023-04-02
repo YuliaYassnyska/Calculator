@@ -14,6 +14,9 @@ set(PROJECT_SOURCES
         src/buttons/operatorButton/operatorbutton.cpp
         src/buttons/numberButton/numberbutton.h
         src/buttons/numberButton/numberbutton.cpp
+        resources.qrc
+        src/centralWidget/centralwidget.h
+        src/centralWidget/centralwidget.cpp
 )
 
 if(APPLE)

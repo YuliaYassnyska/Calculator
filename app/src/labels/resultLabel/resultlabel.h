@@ -8,4 +8,5 @@ public:
     ResultLabel(QWidget *parent);
 
 private:
+    void paintEvent(QPaintEvent *event) override;
 };

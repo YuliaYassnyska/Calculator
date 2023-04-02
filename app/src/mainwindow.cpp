@@ -2,6 +2,7 @@
 #include "buttons/numberButton/numberbutton.h"
 #include "buttons/operatorButton/operatorbutton.h"
 #include "buttons/optionButton/optionbutton.h"
+#include "centralWidget/centralwidget.h"
 #include "labels/resultLabel/resultlabel.h"
 #include "labels/stackLabel/stacklabel.h"
 
@@ -32,7 +33,7 @@ QVector<QPushButton *> numbers(QWidget *parent)
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      _centralWidget{ new QWidget{ parent } },
+      _centralWidget{ new CentralWidget{ parent } },
       _buttonsWidget{ new QWidget{ parent } },
       _digitsWidget{ new QWidget{ parent } },
       _operatorsWidget{ new QWidget{ parent } },
@@ -53,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
     addOperators(parent);
     addOptions(parent);
     addNumbers(parent);
-    _digitsLayout->setContentsMargins(0, 0, 0, 0);
+    setSpacingBeetwenElements();
 }
 
 MainWindow::~MainWindow()
@@ -63,7 +64,7 @@ MainWindow::~MainWindow()
 void MainWindow::initWindow()
 {
     setWindowTitle(QStringLiteral("Magic"));
-    setFixedSize(300, 400);
+    setFixedSize(300, 450);
     setCentralWidget(_centralWidget);
     _centralWidget->setLayout(_mainLayout);
 }
@@ -76,11 +77,11 @@ void MainWindow::addLabels()
 
 void MainWindow::addWidgetsToLayouts()
 {
-    _mainLayout->addWidget(_buttonsWidget);
-    _buttonsLayout->addWidget(_digitsWidget);
-    _buttonsLayout->addWidget(_operatorsWidget);
-    _digitsLayout->addWidget(_optionsWidget);
-    _digitsLayout->addWidget(_numbersWidget);
+    _mainLayout->addWidget(_buttonsWidget, 0, Qt::AlignCenter);
+    _buttonsLayout->addWidget(_digitsWidget, 0, Qt::AlignCenter);
+    _buttonsLayout->addWidget(_operatorsWidget, 0, Qt::AlignRight);
+    _digitsLayout->addWidget(_optionsWidget, 10, Qt::AlignCenter);
+    _digitsLayout->addWidget(_numbersWidget, 20, Qt::AlignCenter | Qt::AlignTop);
 }
 
 void MainWindow::addOptions(QWidget *parent)
@@ -113,4 +114,13 @@ void MainWindow::addOperators(QWidget *parent)
     {
         _operatorsLayout->addWidget(oper);
     }
+}
+
+void MainWindow::setSpacingBeetwenElements()
+{
+    _digitsLayout->setAlignment(Qt::AlignTop);
+    _digitsLayout->setContentsMargins(0, 0, 0, 0);
+    _digitsLayout->setSpacing(0);
+    _numbersLayout->setContentsMargins(0, 0, 0, 0);
+    _optionsLayout->setAlignment(Qt::AlignTop);
 }

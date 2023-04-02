@@ -8,4 +8,5 @@ public:
     StackLabel(QWidget *parent);
 
 private:
+    void paintEvent(QPaintEvent *event) override;
 };

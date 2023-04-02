@@ -22,6 +22,7 @@ public:
     void addOptions(QWidget *parent);
     void addNumbers(QWidget *parent);
     void addOperators(QWidget *parent);
+    void setSpacingBeetwenElements();
 
 private:
     QWidget *_centralWidget{ nullptr };
