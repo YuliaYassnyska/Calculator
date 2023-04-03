@@ -1,5 +1,23 @@
 <RCC>
     <qresource prefix="/image">
         <file>resources/ocean.jpg</file>
+        <file>resources/shark_c.jpg</file>
+        <file>resources/shark_ce.jpg</file>
+        <file>resources/dot.jpeg</file>
+        <file>resources/eight.jpeg</file>
+        <file>resources/equal.jpeg</file>
+        <file>resources/five.jpeg</file>
+        <file>resources/four.webp</file>
+        <file>resources/nine.jpeg</file>
+        <file>resources/one.jpg</file>
+        <file>resources/seven.jpeg</file>
+        <file>resources/six.webp</file>
+        <file>resources/three.jpg</file>
+        <file>resources/two.jpg</file>
+        <file>resources/zero.avif</file>
+        <file>resources/divide.jpg</file>
+        <file>resources/minus.jpg</file>
+        <file>resources/multiply.jpg</file>
+        <file>resources/plus.jpg</file>
     </qresource>
 </RCC>
