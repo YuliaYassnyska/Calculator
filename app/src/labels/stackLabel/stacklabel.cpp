@@ -14,7 +14,7 @@ void StackLabel::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-    QPen pen(Qt::black);
+    QPen pen(Qt::white);
     const int penWidth{ 2 };
     pen.setWidth(penWidth);
     painter.setPen(pen);
@@ -22,5 +22,10 @@ void StackLabel::paintEvent(QPaintEvent *event)
     QRect borderRect{ QRect{ labelRect.x() + penWidth, labelRect.y() + penWidth,
                              labelRect.width() - penWidth * 2,
                              labelRect.height() - penWidth * 2 } };
+    painter.drawRoundedRect(borderRect, 10, 10);
+
+    QBrush brush{ QColor{ 38, 217, 237 } };
+    painter.setBrush(brush);
+    painter.setOpacity(0.6);
     painter.drawRoundedRect(borderRect, 10, 10);
 }

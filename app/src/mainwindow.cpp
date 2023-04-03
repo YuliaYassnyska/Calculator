@@ -12,23 +12,32 @@
 
 QVector<QPushButton *> options(QWidget *parent)
 {
-    return { new OptionButton("C", parent), new OptionButton("CE", parent) };
+    return { new OptionButton("C", ":/image/resources/shark_c.jpg", parent),
+             new OptionButton("CE", ":/image/resources/shark_ce.jpg", parent) };
 }
 
 QVector<QPushButton *> operators(QWidget *parent)
 {
-    return { new OperatorButton("/", parent), new OperatorButton("x", parent),
-             new OperatorButton("-", parent), new OperatorButton("+", parent) };
+    return { new OperatorButton("/", ":/image/resources/divide.jpg", parent),
+             new OperatorButton("x", ":/image/resources/multiply.jpg", parent),
+             new OperatorButton("-", ":/image/resources/minus.jpg", parent),
+             new OperatorButton("+", ":/image/resources/plus.jpg", parent) };
 }
 
 QVector<QPushButton *> numbers(QWidget *parent)
 {
-    return { new NumberButton("1", parent), new NumberButton("2", parent),
-             new NumberButton("3", parent), new NumberButton("4", parent),
-             new NumberButton("5", parent), new NumberButton("6", parent),
-             new NumberButton("7", parent), new NumberButton("8", parent),
-             new NumberButton("9", parent), new NumberButton(".", parent),
-             new NumberButton("0", parent), new NumberButton("=", parent) };
+    return { new NumberButton("1", ":/image/resources/one.jpg", parent),
+             new NumberButton("2", ":/image/resources/two.jpg", parent),
+             new NumberButton("3", ":/image/resources/three.jpg", parent),
+             new NumberButton("4", ":/image/resources/four.webp", parent),
+             new NumberButton("5", ":/image/resources/five.jpeg", parent),
+             new NumberButton("6", ":/image/resources/six.webp", parent),
+             new NumberButton("7", ":/image/resources/seven.jpeg", parent),
+             new NumberButton("8", ":/image/resources/eight.jpeg", parent),
+             new NumberButton("9", ":/image/resources/nine.jpeg", parent),
+             new NumberButton(".", ":/image/resources/dot.jpeg", parent),
+             new NumberButton("0", ":/image/resources/zero.avif", parent),
+             new NumberButton("=", ":/image/resources/equal.jpeg", parent) };
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -86,7 +95,7 @@ void MainWindow::addWidgetsToLayouts()
 
 void MainWindow::addOptions(QWidget *parent)
 {
-    for (auto option : options(parent))
+    for (const auto option : options(parent))
     {
         _optionsLayout->addWidget(option);
     }
@@ -97,7 +106,7 @@ void MainWindow::addNumbers(QWidget *parent)
     const int maxColumns{ 3 };
     int row{ 0 };
     int column{ 0 };
-    for (auto number : numbers(parent))
+    for (const auto number : numbers(parent))
     {
         _numbersLayout->addWidget(number, row, column++);
         if (column == maxColumns)
@@ -110,7 +119,7 @@ void MainWindow::addNumbers(QWidget *parent)
 
 void MainWindow::addOperators(QWidget *parent)
 {
-    for (auto oper : operators(parent))
+    for (const auto oper : operators(parent))
     {
         _operatorsLayout->addWidget(oper);
     }
