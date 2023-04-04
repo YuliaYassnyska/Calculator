@@ -5,11 +5,17 @@
 StackLabel::StackLabel(QWidget *parent) : QLabel(parent)
 {
     setFixedHeight(30);
+    setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    QFont font("serif", 14, 60);
+    setFont(font);
+    QPalette palette;
+    palette.setColor(foregroundRole(), Qt::white);
+    setPalette(palette);
+    setContentsMargins(0, 0, 10, 0);
 }
 
 void StackLabel::paintEvent(QPaintEvent *event)
 {
-    QLabel::paintEvent(event);
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -28,4 +34,6 @@ void StackLabel::paintEvent(QPaintEvent *event)
     painter.setBrush(brush);
     painter.setOpacity(0.6);
     painter.drawRoundedRect(borderRect, 10, 10);
+
+    QLabel::paintEvent(event);
 }

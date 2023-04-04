@@ -17,6 +17,7 @@ set(PROJECT_SOURCES
         resources.qrc
         src/centralWidget/centralwidget.h
         src/centralWidget/centralwidget.cpp
+        src/utils/utils.h
 )
 
 if(APPLE)

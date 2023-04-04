@@ -5,6 +5,7 @@
 #include "centralWidget/centralwidget.h"
 #include "labels/resultLabel/resultlabel.h"
 #include "labels/stackLabel/stacklabel.h"
+#include "utils/utils.h"
 
 #include <QDebug>
 #include <QPushButton>
@@ -36,8 +37,7 @@ QVector<QPushButton *> numbers(QWidget *parent)
              new NumberButton("8", ":/image/resources/eight.jpeg", parent),
              new NumberButton("9", ":/image/resources/nine.jpeg", parent),
              new NumberButton(".", ":/image/resources/dot.jpeg", parent),
-             new NumberButton("0", ":/image/resources/zero.avif", parent),
-             new NumberButton("=", ":/image/resources/equal.jpeg", parent) };
+             new NumberButton("0", ":/image/resources/zero.avif", parent) };
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -64,6 +64,7 @@ MainWindow::MainWindow(QWidget *parent)
     addOptions(parent);
     addNumbers(parent);
     setSpacingBeetwenElements();
+    addEqual(parent);
 }
 
 MainWindow::~MainWindow()
@@ -95,9 +96,22 @@ void MainWindow::addWidgetsToLayouts()
 
 void MainWindow::addOptions(QWidget *parent)
 {
-    for (const auto option : options(parent))
+    for (QPushButton *option : options(parent))
     {
         _optionsLayout->addWidget(option);
+        connect(option, &QPushButton::clicked,
+                [resultLabel = _resultLabel, stackLabel = _stackLabel, option](bool)
+                {
+                    if (option->text() == "C")
+                    {
+                        resultLabel->setText("");
+                        stackLabel->setText("");
+                    }
+                    else
+                    {
+                        resultLabel->setText("");
+                    }
+                });
     }
 }
 
@@ -106,9 +120,24 @@ void MainWindow::addNumbers(QWidget *parent)
     const int maxColumns{ 3 };
     int row{ 0 };
     int column{ 0 };
-    for (const auto number : numbers(parent))
+    for (QPushButton *number : numbers(parent))
     {
         _numbersLayout->addWidget(number, row, column++);
+        connect(number, &QPushButton::clicked,
+                [resultLabel = _resultLabel, number = number](bool)
+                {
+                    QString text = resultLabel->text();
+
+                    if (number->text().contains('.'))
+                    {
+                        if (text.contains('.'))
+                            return;
+                        else if (text.isEmpty())
+                            text = QStringLiteral("0");
+                    }
+
+                    resultLabel->setText(text + number->text());
+                });
         if (column == maxColumns)
         {
             column = 0;
@@ -119,10 +148,33 @@ void MainWindow::addNumbers(QWidget *parent)
 
 void MainWindow::addOperators(QWidget *parent)
 {
-    for (const auto oper : operators(parent))
+    for (QPushButton *oper : operators(parent))
     {
         _operatorsLayout->addWidget(oper);
+        connect(oper, &QPushButton::clicked,
+                [resultLabel = _resultLabel, stackLabel = _stackLabel, oper = oper](bool)
+                {
+                    QString text{ stackLabel->text() };
+                    const bool stackIsEmpty{ text.isEmpty() };
+                    const bool resultIsEmpty{ resultLabel->text().isEmpty() };
+                    if (!resultIsEmpty)
+                    {
+                        stackLabel->setText(text + resultLabel->text() + oper->text());
+                        resultLabel->setText("");
+                    }
+                    else if (!stackIsEmpty && Utils::isOperator(text.toStdString().back()))
+                    {
+                        text.replace(text.size() - 1, 1, oper->text().toStdString().back());
+                        stackLabel->setText(text);
+                    }
+                });
     }
+}
+
+void MainWindow::addEqual(QWidget *parent)
+{
+    QPushButton *button = new NumberButton("=", ":/image/resources/equal.jpeg", parent);
+    _numbersLayout->addWidget(button, 3, 2);
 }
 
 void MainWindow::setSpacingBeetwenElements()
