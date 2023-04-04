@@ -34,9 +34,11 @@ void NumberButton::paintEvent(QPaintEvent *event)
     painter.drawRoundedRect(borderRect, cornerRadius, cornerRadius);
 
     QBrush brush{ pixmap };
-    painter.setOpacity(0.6);
+    if (!isDown())
+        painter.setOpacity(0.6);
     painter.setBrush(brush);
     painter.drawRoundedRect(borderRect, cornerRadius, cornerRadius);
 
-    QPushButton::paintEvent(event);
+    painter.setOpacity(1.0);
+    painter.drawText(borderRect, Qt::AlignCenter, text());
 }

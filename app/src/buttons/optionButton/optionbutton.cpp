@@ -34,8 +34,10 @@ void OptionButton::paintEvent(QPaintEvent *event)
     QPixmap pixmap{ QPixmap{ _image }.scaled(borderRect.size()) };
     QBrush brush{ pixmap };
     painter.setBrush(brush);
-    painter.setOpacity(0.6);
+    if (!isDown())
+        painter.setOpacity(0.6);
     painter.drawRoundedRect(borderRect, cornerRadius, cornerRadius);
 
-    QPushButton::paintEvent(event);
+    painter.setOpacity(1.0);
+    painter.drawText(borderRect, Qt::AlignCenter, text());
 }
