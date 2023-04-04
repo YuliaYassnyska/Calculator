@@ -4,11 +4,31 @@ set(PROJECT_SOURCES
         src/main.cpp
         src/mainwindow.cpp
         src/mainwindow.h
+        src/labels/stackLabel/stacklabel.h
+        src/labels/stackLabel/stacklabel.cpp
+        src/labels/resultLabel/resultlabel.h
+        src/labels/resultLabel/resultlabel.cpp
+        src/buttons/optionButton/optionbutton.h
+        src/buttons/optionButton/optionbutton.cpp
+        src/buttons/operatorButton/operatorbutton.h
+        src/buttons/operatorButton/operatorbutton.cpp
+        src/buttons/numberButton/numberbutton.h
+        src/buttons/numberButton/numberbutton.cpp
+        resources.qrc
+        src/centralWidget/centralwidget.h
+        src/centralWidget/centralwidget.cpp
 )
 
-add_executable(${PROJECT_NAME}
-    ${PROJECT_SOURCES}
-)
+if(APPLE)
+    add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${PROJECT_SOURCES})
+
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+    MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/cmake/MacOSInfo.plist)
+else()
+    add_executable(${PROJECT_NAME}
+        ${PROJECT_SOURCES}
+    )
+endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
