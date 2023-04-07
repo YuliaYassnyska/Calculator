@@ -8,6 +8,8 @@ class QGridLayout;
 class QLabel;
 class QPushButton;
 
+class CalculatorController;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -42,4 +44,6 @@ private:
 
     QLabel *_stackLabel{ nullptr };
     QLabel *_resultLabel{ nullptr };
+
+    CalculatorController *_controller{ nullptr };
 };

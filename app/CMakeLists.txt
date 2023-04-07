@@ -18,6 +18,11 @@ set(PROJECT_SOURCES
         src/centralWidget/centralwidget.h
         src/centralWidget/centralwidget.cpp
         src/utils/utils.h
+        src/model/calculatormodel.h
+        src/model/calculatormodel.cpp
+        src/model/imodel.h
+        src/controller/calculatorcontroller.h
+        src/controller/calculatorcontroller.cpp
 )
 
 if(APPLE)
@@ -40,6 +45,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
+
+include_directories(src)
 
 install(TARGETS calculator
     BUNDLE DESTINATION .
