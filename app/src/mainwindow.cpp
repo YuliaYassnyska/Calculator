@@ -3,6 +3,7 @@
 #include "buttons/operatorButton/operatorbutton.h"
 #include "buttons/optionButton/optionbutton.h"
 #include "centralWidget/centralwidget.h"
+#include "controller/calculatorcontroller.h"
 #include "labels/resultLabel/resultlabel.h"
 #include "labels/stackLabel/stacklabel.h"
 #include "utils/utils.h"
@@ -55,7 +56,8 @@ MainWindow::MainWindow(QWidget *parent)
       _optionsLayout{ new QHBoxLayout(_optionsWidget) },
       _numbersLayout{ new QGridLayout(_numbersWidget) },
       _stackLabel{ new StackLabel{ parent } },
-      _resultLabel{ new ResultLabel{ parent } }
+      _resultLabel{ new ResultLabel{ parent } },
+      _controller{ new CalculatorController() }
 {
     initWindow();
     addLabels();
@@ -100,12 +102,15 @@ void MainWindow::addOptions(QWidget *parent)
     {
         _optionsLayout->addWidget(option);
         connect(option, &QPushButton::clicked,
-                [resultLabel = _resultLabel, stackLabel = _stackLabel, option](bool)
+                [resultLabel = _resultLabel, stackLabel = _stackLabel, option,
+                 controller = _controller](bool)
                 {
                     if (option->text() == "C")
                     {
                         resultLabel->setText("");
                         stackLabel->setText("");
+                        controller->deleteNumbers();
+                        controller->deleteOperators();
                     }
                     else
                     {
@@ -152,19 +157,23 @@ void MainWindow::addOperators(QWidget *parent)
     {
         _operatorsLayout->addWidget(oper);
         connect(oper, &QPushButton::clicked,
-                [resultLabel = _resultLabel, stackLabel = _stackLabel, oper = oper](bool)
+                [resultLabel = _resultLabel, stackLabel = _stackLabel, oper = oper,
+                 controller = _controller](bool)
                 {
                     QString text{ stackLabel->text() };
                     const bool stackIsEmpty{ text.isEmpty() };
                     const bool resultIsEmpty{ resultLabel->text().isEmpty() };
                     if (!resultIsEmpty)
                     {
+                        controller->addNumber(resultLabel->text().toDouble());
+                        controller->addOperator(oper->text().front().toLatin1());
                         stackLabel->setText(text + resultLabel->text() + oper->text());
                         resultLabel->setText("");
                     }
                     else if (!stackIsEmpty && Utils::isOperator(text.toStdString().back()))
                     {
                         text.replace(text.size() - 1, 1, oper->text().toStdString().back());
+                        controller->replaceLastOperator(oper->text().front().toLatin1());
                         stackLabel->setText(text);
                     }
                 });
@@ -175,6 +184,23 @@ void MainWindow::addEqual(QWidget *parent)
 {
     QPushButton *button = new NumberButton("=", ":/image/resources/equal.jpeg", parent);
     _numbersLayout->addWidget(button, 3, 2);
+    connect(button, &QPushButton::clicked,
+            [equal = button, resultLabel = _resultLabel, stackLabel = _stackLabel,
+             controller = _controller](bool)
+            {
+                if (resultLabel->text().isEmpty())
+                {
+                    controller->deleteLastOperator();
+                }
+                else if (!resultLabel->text().isEmpty())
+                {
+                    controller->addNumber(resultLabel->text().toDouble());
+                }
+
+                resultLabel->setText(controller->getResult());
+
+                stackLabel->setText("");
+            });
 }
 
 void MainWindow::setSpacingBeetwenElements()
